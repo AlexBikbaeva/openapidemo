@@ -4,6 +4,7 @@ import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +13,10 @@ import org.springframework.core.env.Environment;
 import java.util.List;
 
 @Configuration
+@AllArgsConstructor
 public class OpenAPIConfiguration {
 
-    @Autowired
     private Environment environment;
-
 
     @Bean
     public OpenAPI defineOpenAPI () {

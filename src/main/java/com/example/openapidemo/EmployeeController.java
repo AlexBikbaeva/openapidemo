@@ -15,17 +15,19 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/v1")
 public class EmployeeController {
+
     private EmployeeRepository repository;
 
     @Tag(name = "get", description = "GET-методы Employee API")
-    @GetMapping("/v1/employees")
+    @GetMapping("/employees")
     public List<Employee> findAllEmployees() {
         return repository.findAll();
     }
 
     @Tag(name = "get", description = "GET-методы Employee API")
-    @GetMapping("/v1/employees/{employeeId}")
+    @GetMapping("/employees/{employeeId}")
     public Employee getEmployee(@Parameter(
             description = "ID сотрудника, данные по которому запрашиваются",
             required = true)
@@ -34,16 +36,16 @@ public class EmployeeController {
                 .orElseThrow(() -> new EmployeeNotFoundException(employeeId));
     }
 
-    @PostMapping("/v1/employees")
-    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Добавить сотрудника", description = "В ответе возвращается объект Employee c полями id, firstName и lastName.")
+    @PostMapping("/employees")
     public ResponseEntity<Employee> addEmployee(@RequestBody Employee newEmployee) {
         Employee savedEmployee = repository.save(newEmployee);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
     }
 
-    @Operation(summary = "Обновить данные о сотруднике", description = "Обновить данные о сотруднике. В ответе возвращается объект Employee c полями id, firstName и lastName.")
-    @PutMapping("/v1/employees/{employeeId}")
-    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee, @PathVariable int employeeId) {
+    @Operation(summary = "Обновить данные о сотруднике", description = "В ответе возвращается объект Employee c полями id, firstName и lastName.")
+    @PutMapping("/employees/{employeeId}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable int employeeId, @RequestBody Employee employee) {
         return repository.findById(employeeId)
                 .map(existingEmployee -> {
                     existingEmployee.setFirstName(employee.getFirstName());
@@ -59,7 +61,7 @@ public class EmployeeController {
             @ApiResponse(responseCode = "204", description = "Сотрудник успешно удалён"),
             @ApiResponse(responseCode = "404", description = "Сотрудник не найден")
     })
-    @DeleteMapping("/v1/employees/{employeeId}")
+    @DeleteMapping("/employees/{employeeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteEmployee(@PathVariable int employeeId) {
         repository.findById(employeeId).ifPresentOrElse(
