@@ -44,9 +44,9 @@ public class EmployeeController {
     }
 
     @Operation(summary = "Обновить данные о сотруднике", description = "В ответе возвращается объект Employee c полями id, firstName и lastName.")
-    @PutMapping("/employees/{employeeId}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable int employeeId, @RequestBody Employee employee) {
-        return repository.findById(employeeId)
+    @PutMapping("/employees")
+    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
+        return repository.findById(employee.getId())
                 .map(existingEmployee -> {
                     existingEmployee.setFirstName(employee.getFirstName());
                     existingEmployee.setLastName(employee.getLastName());
